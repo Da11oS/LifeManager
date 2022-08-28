@@ -4,7 +4,7 @@
 <#@ include file="$(LinqToDBT4PostgreSQLTemplatesPath)LinqToDB.PostgreSQL.Tools.ttinclude" once="true" #>
 <#@ include file="$(LinqToDBT4PostgreSQLTemplatesPath)PluralizationService.ttinclude"      once="true" #>
 <#
-NamespaceName            = "Database";       // Namespace of the generated classes.
+NamespaceName            = "LM.Data";       // Namespace of the generated classes.
 
 	DataContextName          = "DbContext";      // DataContext class name. If null - database name + "DB".
 	BaseDataContextClass     = "LinqToDB.Data.DataConnection";               // Base DataContext class name. If null - LinqToDB.Data.DataConnection.

@@ -13,7 +13,7 @@ using LinqToDB;
 using LinqToDB.Configuration;
 using LinqToDB.Mapping;
 
-namespace Database
+namespace LM.Data
 {
 	/// <summary>
 	/// Database       : rabbit_test
