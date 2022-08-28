@@ -13,54 +13,26 @@ using LinqToDB;
 using LinqToDB.Configuration;
 using LinqToDB.Mapping;
 
-namespace DataModels
+namespace Database
 {
 	/// <summary>
 	/// Database       : rabbit_test
 	/// Data Source    : tcp://localhost:5432
 	/// Server Version : 14.1
 	/// </summary>
-	public partial class RabbitTestDB : LinqToDB.Data.DataConnection
+	public partial class DbContext : LinqToDB.Data.DataConnection
 	{
-		public ITable<Message> Messages { get { return this.GetTable<Message>(); } }
+		public ITable<messages> messages { get { return this.GetTable<messages>(); } }
 
-		partial void InitMappingSchema()
+		protected void InitMappingSchema()
 		{
 		}
-
-		public RabbitTestDB()
-		{
-			InitDataContext();
-			InitMappingSchema();
-		}
-
-		public RabbitTestDB(string configuration)
-			: base(configuration)
-		{
-			InitDataContext();
-			InitMappingSchema();
-		}
-
-		public RabbitTestDB(LinqToDBConnectionOptions options)
-			: base(options)
-		{
-			InitDataContext();
-			InitMappingSchema();
-		}
-
-		public RabbitTestDB(LinqToDBConnectionOptions<RabbitTestDB> options)
-			: base(options)
-		{
-			InitDataContext();
-			InitMappingSchema();
-		}
-
-		partial void InitDataContext  ();
-		partial void InitMappingSchema();
 	}
 
 	[Table(Schema="rabbit", Name="messages")]
-	public partial class Message
+	public partial class messages
 	{
+		[Column(DbType="bigint", DataType=LinqToDB.DataType.Int64, Precision=64, Scale=0), Nullable]
+		public long? id { get; set; } // bigint
 	}
 }

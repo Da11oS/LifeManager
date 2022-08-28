@@ -4,51 +4,44 @@
 <#@ include file="$(LinqToDBT4PostgreSQLTemplatesPath)LinqToDB.PostgreSQL.Tools.ttinclude" once="true" #>
 <#@ include file="$(LinqToDBT4PostgreSQLTemplatesPath)PluralizationService.ttinclude"      once="true" #>
 <#
-	/*
-		1. Create new *.tt file (e.g. MyDatabase.tt) in a folder where you would like to generate your data model
-		   and copy content from this file to it. For example:
+NamespaceName            = "Database";       // Namespace of the generated classes.
 
-			MyProject
-				DataModels
-					MyDatabase.tt
+	DataContextName          = "DbContext";      // DataContext class name. If null - database name + "DB".
+	BaseDataContextClass     = "LinqToDB.Data.DataConnection";               // Base DataContext class name. If null - LinqToDB.Data.DataConnection.
+	GenerateConstructors     = false;               // Enforce generating DataContext constructors.
+	DefaultConfiguration     = "Default";               // Defines default configuration for default DataContext constructor.
 
-		2. Modify the connection settings below to connect to your database.
+	BaseEntityClass          = null;               // Base Entity class name. If null - none.
+	DatabaseName             = null;               // Table database name - [Table(Database="DatabaseName")].
+	GenerateDatabaseName     = false;              // Always generate table database name, even though DatabaseName is null.
+	IncludeDefaultSchema     = true;               // Default schema name is generated - [Table(Database="Northwind", Schema="dbo", Name="Customers")]
+	OneToManyAssociationType = "IEnumerable<{0}>"; // One To Many association type. Change it to "List<{0}>" if needed.
+	GenerateAssociations     = true;               // Enforce generating associations.
+	GenerateBackReferences   = false;               // Enforce generating backreference associations.
 
-		3. Add connection string to the web/app.config file:
+	ReplaceSimilarTables     = true;               // Replaces stored procedure result class names with similar to existing table class names.
+	GenerateFindExtensions   = true;               // Generates find extension methods based on PKs information.
+	IsCompactColumns         = false;               // If true, column compact view.
 
-			<connectionStrings>
-				<!--https://www.npgsql.org/doc/connection-string-parameters.html-->
-				<add name="MyDatabase" connectionString="Server=MyServer;Port=5432;Database=MyDatabase;User Id=postgres;Password=TestPassword;" providerName="PostgreSQL" />
-			</connectionStrings>
+	PluralizeClassNames                 = false;   // If true, pluralizes table class names.
+	SingularizeClassNames               = false;   // If true, singularizes table class names.
+	SingularizeClassNames               = false;   // If true, singularizes table class names.
+	PluralizeDataContextPropertyNames   = false;   // If true, pluralizes DataContext property names.
+	SingularizeDataContextPropertyNames = false;   // If true, singularizes DataContex pProperty names.
 
-		4. To access your database use the following code:
+	GenerateDataTypes                   = true;    // If true, generates the DataType/Length/Precision/Scale properties of the Column attribute (unless overriden by the properties below).
+	//GenerateDataTypeProperty          = true;    // If true, generates the DataType property of the Column attribute. If false, excludes generation on the DataType property even if GenerateDataTypes == true.
+	GenerateLengthProperty              = true;    // If true, generates the Length property of the Column attribute. If false, excludes generation on the Length property even if GenerateDataTypes == true.
+	GeneratePrecisionProperty           = true;    // If true, generates the Precision property of the Column attribute. If false, excludes generation on the Precision property even if GenerateDataTypes == true.
+	GenerateScaleProperty               = true;    // If true, generates the Scale property of the Column attribute. If false, excludes generation on the Scale property even if GenerateDataTypes == true.
+	GenerateDbTypes                     = true;    // If true, generates the DbType property of the Column attribute.
 
-			using (var db = new MyDatabaseDB())
-			{
-				var q =
-					from c in db.Customers
-					select c;
+	GenerateObsoleteAttributeForAliases = false;   // If true, generates [Obsolete] attribute for aliases.
+	IsCompactColumnAliases              = false;    // If true, column alias compact view.
 
-				foreach (var c in q)
-					Console.WriteLine(c.ContactName);
-			}
-
-		5. See more at https://linq2db.github.io/articles/T4.html
-
-		IMPORTANT: if running .tt file gives you error like this:
-		"error : Failed to resolve include text for file: C:\...\$(LinqToDBT4<DB>TemplatesPath)LinqToDB.<DB>.Tools.ttinclude"
-		check tt file properties.
-		Custom tool must be set to TextTemplatingFileGenerator, not TextTemplatingFilePreprocessor or any other value.
-	*/
-
-	NamespaceName = "DataModels";
-
-	// to configure GetSchemaOptions properties, add them here, before load metadata call
+	NormalizeNames                      = false;    // convert some_name to SomeName for types and members
 
 	LoadPostgreSQLMetadata("localhost", "5432", "rabbit_test", "postgres", "postgres");
-//	LoadPostgreSQLMetadata(string connectionString);
-
-	// to adjust loaded database model before generation, add your code here, after load metadata, but before GenerateModel() call
 
 	GenerateModel();
 #>

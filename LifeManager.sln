@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LM.Api", "LifeManager\LM.Api.csproj", "{CB8AEAC4-8735-4970-9F59-412DB0D0A994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LM.Api", "LifeManager\LM.Api.csproj", "{CB8AEAC4-8735-4970-9F59-412DB0D0A994}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LM.Data", "LM.Data\LM.Data.csproj", "{7E059B2B-9334-4C58-A467-44C1DF2AA3C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LM.Data", "LM.Data\LM.Data.csproj", "{7E059B2B-9334-4C58-A467-44C1DF2AA3C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LM.BLogic", "LM.BLogic\LM.BLogic.csproj", "{58786222-391B-4ABB-91D7-B3DA8CD499A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LM.BLogic", "LM.BLogic\LM.BLogic.csproj", "{58786222-391B-4ABB-91D7-B3DA8CD499A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LM.Tests", "LM.Tests\LM.Tests.csproj", "{76A9AC8F-ADEB-4C3B-A06F-EA36031FFE84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{58786222-391B-4ABB-91D7-B3DA8CD499A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58786222-391B-4ABB-91D7-B3DA8CD499A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58786222-391B-4ABB-91D7-B3DA8CD499A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76A9AC8F-ADEB-4C3B-A06F-EA36031FFE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76A9AC8F-ADEB-4C3B-A06F-EA36031FFE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76A9AC8F-ADEB-4C3B-A06F-EA36031FFE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76A9AC8F-ADEB-4C3B-A06F-EA36031FFE84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
