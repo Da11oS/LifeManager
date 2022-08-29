@@ -1,9 +1,6 @@
-﻿using LinqToDB.AspNet;
-using LinqToDB.AspNet.Logging;
-using LinqToDB.Configuration;
+﻿using LinqToDB.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using LinqToDB.Configuration;
 
 namespace LM.Data;
 public static class DataServiceExtension
@@ -15,7 +12,6 @@ public static class DataServiceExtension
     /// <returns></returns>
     public static IServiceCollection AddDataService(this IServiceCollection services, IConfiguration config)
     {
-        //services.AddScoped<IIdentityUserSvc, IdentityUserSvc>();
         services.AddScoped<LM.Data.DbContext>();
         var polyConnectionOptBuilder = new LinqToDBConnectionOptionsBuilder()
             .UsePostgreSQL(config.GetConnectionString("ConnectionStringLifeManager"));

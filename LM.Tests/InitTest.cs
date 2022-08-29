@@ -10,31 +10,31 @@ namespace LM.Tests
     /// </summary>
     public static class TestsInit
     {
-        private static ServiceProvider provider;
+        private static ServiceProvider _provider;
 
-        public static IConfiguration configuration;
+        public static IConfiguration Configuration;
 
         public static ServiceProvider CreateService()
         {
-            if (configuration == null)
+            if (Configuration == null)
             {
-                configuration = new ConfigurationBuilder()
+                Configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", optional: false)
                     .Build();
             }
 
-            if (provider == null)
+            if (_provider == null)
             {
                 ServiceCollection services = new ServiceCollection();
 
-                services.AddDataService(configuration);
+                services.AddDataService(Configuration);
 
                 services.AddLogging(configure => configure.AddDebug());
 
-                provider = services.BuildServiceProvider();
+                _provider = services.BuildServiceProvider();
             }
 
-            return provider;
+            return _provider;
         }
     }
 }
