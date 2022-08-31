@@ -16,23 +16,38 @@ using LinqToDB.Mapping;
 namespace LM.Data
 {
 	/// <summary>
-	/// Database       : rabbit_test
+	/// Database       : life_manager
 	/// Data Source    : tcp://localhost:5432
 	/// Server Version : 14.1
 	/// </summary>
 	public partial class DbContext : LinqToDB.Data.DataConnection
 	{
-		public ITable<messages> messages { get { return this.GetTable<messages>(); } }
+		public ITable<user> user { get { return this.GetTable<user>(); } }
 
 		protected void InitMappingSchema()
 		{
 		}
 	}
 
-	[Table(Schema="rabbit", Name="messages")]
-	public partial class messages
+	[Table(Schema="adm", Name="user")]
+	public partial class user
 	{
-		[Column(DbType="bigint", DataType=LinqToDB.DataType.Int64, Precision=64, Scale=0), Nullable]
-		public long? id { get; set; } // bigint
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		public string mail { get; set; } // text
+
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		public string password { get; set; } // text
+
+		[Column(DbType="uuid",     DataType=LinqToDB.DataType.Guid) , Nullable]
+		public Guid? id { get; set; } // uuid
+
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		public string user_name { get; set; } // text
+
+		[Column(DbType="smallint", DataType=LinqToDB.DataType.Int16, Precision=16, Scale=0), Nullable]
+		public short? role { get; set; } // smallint
+
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		public string normalize_name { get; set; } // text
 	}
 }

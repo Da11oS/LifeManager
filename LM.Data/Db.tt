@@ -41,7 +41,7 @@ NamespaceName            = "LM.Data";       // Namespace of the generated classe
 
 	NormalizeNames                      = false;    // convert some_name to SomeName for types and members
 
-	LoadPostgreSQLMetadata("localhost", "5432", "rabbit_test", "postgres", "postgres");
+	LoadPostgreSQLMetadata("localhost", "5432", "life_manager", "postgres", "postgres");
 
 	GenerateModel();
 #>

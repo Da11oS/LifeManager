@@ -1,4 +1,5 @@
 ﻿using LinqToDB;
+using System.Linq.Expressions;
 
 namespace LM.Data;
 public class Repository<T>: IRepository<T> where T: class
@@ -10,8 +11,8 @@ public class Repository<T>: IRepository<T> where T: class
         _ctx = context;
     }
 
-    public Task<T?> Get(Func<T, bool> func, CancellationToken cancellationToken = default) 
-        => _ctx.GetTable<T>().FirstOrDefaultAsync(f => func(f), cancellationToken);
+    public Task<T?> Get(Expression<Func<T, bool>> func, CancellationToken cancellationToken = default) 
+        => _ctx.GetTable<T>().FirstOrDefaultAsync(func, cancellationToken);
 
     public Task<T[]> ReadAsync(CancellationToken cancellationToken = default)
     {

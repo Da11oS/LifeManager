@@ -1,4 +1,6 @@
-﻿namespace LM.Data;
+﻿using System.Linq.Expressions;
+
+namespace LM.Data;
 /// <summary>
 /// Репозиторий
 /// </summary>
@@ -16,7 +18,7 @@ public interface IRepository<T>
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Task<T?> Get(Func<T, bool> func, CancellationToken cancellationToken = default);
+    public Task<T?> Get(Expression<Func<T, bool>> func, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Создать
