@@ -1,4 +1,5 @@
 ﻿using LinqToDB.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,11 @@ public static class DataServiceExtension
     public static IServiceCollection AddDataService(this IServiceCollection services, IConfiguration config)
     {
         services.AddScoped<LM.Data.DbContext>();
+        services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddUserStore<IdentityUser<Guid>>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddTransient<IUserStore<IdentityUser<Guid>>, User>();
+        // services.AddTransient<IRoleStore<IdentityRole>, FakeRoleStore>();
         var polyConnectionOptBuilder = new LinqToDBConnectionOptionsBuilder()
             .UsePostgreSQL(config.GetConnectionString("ConnectionStringLifeManager"));
 

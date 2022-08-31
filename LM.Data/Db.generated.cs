@@ -8,6 +8,7 @@
 #pragma warning disable 1573, 1591
 
 using System;
+using System.Linq;
 
 using LinqToDB;
 using LinqToDB.Configuration;
@@ -32,22 +33,31 @@ namespace LM.Data
 	[Table(Schema="adm", Name="user")]
 	public partial class user
 	{
-		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) ,    Nullable]
 		public string mail { get; set; } // text
 
-		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) ,    Nullable]
 		public string password { get; set; } // text
 
-		[Column(DbType="uuid",     DataType=LinqToDB.DataType.Guid) , Nullable]
-		public Guid? id { get; set; } // uuid
+		[Column(DbType="uuid",     DataType=LinqToDB.DataType.Guid) , PrimaryKey, NotNull]
+		public Guid id { get; set; } // uuid
 
-		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) ,    Nullable]
 		public string user_name { get; set; } // text
 
-		[Column(DbType="smallint", DataType=LinqToDB.DataType.Int16, Precision=16, Scale=0), Nullable]
+		[Column(DbType="smallint", DataType=LinqToDB.DataType.Int16, Precision=16, Scale=0),    Nullable]
 		public short? role { get; set; } // smallint
 
-		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) , Nullable]
+		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) ,    Nullable]
 		public string normalize_name { get; set; } // text
+	}
+
+	public static partial class TableExtensions
+	{
+		public static user Find(this ITable<user> table, Guid id)
+		{
+			return table.FirstOrDefault(t =>
+				t.id == id);
+		}
 	}
 }
