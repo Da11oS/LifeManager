@@ -27,7 +27,7 @@ namespace LM.Tests
             {
                 ServiceCollection services = new ServiceCollection();
 
-                services.AddDataService(Configuration);
+                services.AddDataService(Configuration.GetConnectionString("ConnectionStringLifeManager"));
 
                 services.AddLogging(configure => configure.AddDebug());
 

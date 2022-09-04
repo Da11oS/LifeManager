@@ -1,7 +1,4 @@
-﻿using System.Linq.Expressions;
-using Microsoft.AspNetCore.Identity;
-
-namespace LM.Data;
+﻿namespace LM.Data;
 
 public interface IUserRepository : IRepository<user>
 {

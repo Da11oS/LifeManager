@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LifeManager\LM.Api.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Db.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Db.generated.cs</LastGenOutput>

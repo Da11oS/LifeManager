@@ -1,4 +1,5 @@
 using LM.Api.Admin;
+using LM.Data;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,7 @@ services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
-
+services.AddDataService(Configuration.GetConnectionString("ConnectionStringLifeManager"));
 services.AddIdentityCore<UserView>(opt =>
     {
         opt.Password.RequiredLength = 1;
@@ -22,8 +23,6 @@ services.AddIdentityCore<UserView>(opt =>
 
     })
     .AddUserStore<UserService>();
-var connectionStringPoly = Configuration.GetConnectionString("ConnectionStringLifeManager");
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
