@@ -22,8 +22,11 @@ services.AddIdentityCore<UserView>(opt =>
         opt.User.AllowedUserNameCharacters = string.Empty;
 
     })
-    .AddUserStore<UserService>()
-    ;
+    .AddUserStore<UserService>();
+
+services.AddScoped<IPasswordService, PasswordService>();
+services.AddScoped<IAuthorizationService, AuthorizationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
