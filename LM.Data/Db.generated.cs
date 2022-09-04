@@ -51,13 +51,4 @@ namespace LM.Data
 		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) ,    Nullable]
 		public string normalize_name { get; set; } // text
 	}
-
-	public static partial class TableExtensions
-	{
-		public static user Find(this ITable<user> table, Guid id)
-		{
-			return table.FirstOrDefault(t =>
-				t.id == id);
-		}
-	}
 }
