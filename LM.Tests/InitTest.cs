@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using LM.Api.Admin;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using LM.Data;
@@ -28,7 +29,19 @@ namespace LM.Tests
                 ServiceCollection services = new ServiceCollection();
 
                 services.AddDataService(Configuration.GetConnectionString("ConnectionStringLifeManager"));
+                services.AddIdentityCore<UserView>(opt =>
+                    {
+                        opt.Password.RequiredLength = 1;
+                        opt.Password.RequireNonAlphanumeric = false;
+                        opt.Password.RequireLowercase = false;
+                        opt.Password.RequireUppercase = false;
+                        opt.Password.RequireDigit = false;
 
+                        opt.User.AllowedUserNameCharacters = string.Empty;
+
+                    })
+                    .AddUserStore<UserService>()
+                    .AddPasswordValidator<UserService>();
                 services.AddLogging(configure => configure.AddDebug());
 
                 _provider = services.BuildServiceProvider();

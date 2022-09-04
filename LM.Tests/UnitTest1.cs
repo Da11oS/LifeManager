@@ -9,13 +9,13 @@ namespace LM.Tests
     public class UnitTest1
     {
         private DbContext _ctx;
-        private IUserService _user;
+        private IUserStore<UserView> _user;
 
         [TestInitialize]
         public void Init()
         {
             _ctx = (DbContext)(TestsInit.CreateService().GetService(typeof(DbContext)));
-            _user = (IUserService)(TestsInit.CreateService().GetService(typeof(IUserService)));
+            _user = (IUserStore<UserView>)(TestsInit.CreateService().GetService(typeof(IUserStore<UserView>)));
         }
 
         [TestMethod]

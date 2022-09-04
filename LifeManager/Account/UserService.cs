@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using LM.Data;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Npgsql;
 
@@ -7,7 +9,7 @@ namespace LM.Api.Admin;
 
 public class UserService : IUserService
 {
-    private readonly IUserRepository _repository; 
+    private readonly IUserRepository _repository;
     public UserService(IUserRepository repository)
     {
         _repository = repository;
@@ -18,6 +20,7 @@ public class UserService : IUserService
         // ignore
     }
 
+    #region user
     public Task<string> GetUserIdAsync(UserView user, CancellationToken cancellationToken)
     {
         return Task.FromResult(user.Id.ToString());
@@ -45,6 +48,7 @@ public class UserService : IUserService
 
     public async Task<IdentityResult> CreateAsync(UserView user, CancellationToken cancellationToken)
     {
+        
         try
         {
             await _repository.SaveAsync(user.Map(), cancellationToken);
@@ -77,7 +81,7 @@ public class UserService : IUserService
         
         return IdentityResult.Success;
     }
-
+    
     public async Task<IdentityResult> DeleteAsync(UserView user, CancellationToken cancellationToken)
     {
         try
@@ -110,6 +114,23 @@ public class UserService : IUserService
         
         return res.Map();
     }
+    
+    public async Task<UserView> FindByMailAsync(string mail, CancellationToken cancellationToken)
+    {
+        var res = await _repository.Get((u) => u.mail == mail, cancellationToken);
+        
+        return res.Map();
+    }
+
+    public async Task<UserView> FindByNameOrMailAsync(string normalizedName, string mail, CancellationToken cancellationToken)
+    {
+        var res = await _repository.Get((u) => u.mail == mail || u.normalize_name == normalizedName, cancellationToken);
+        
+        return res.Map();    }
+
+    #endregion
+
+    #region claims
 
     public Task<IList<Claim>> GetClaimsAsync(UserView user, CancellationToken cancellationToken)
     {
@@ -136,21 +157,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task SetPasswordHashAsync(UserView user, string passwordHash, CancellationToken cancellationToken)
-    {
-        user.PasswordHash = passwordHash;
-        return Task.CompletedTask;
-    }
-
-    public Task<string> GetPasswordHashAsync(UserView user, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(user.PasswordHash);
-        
-    }
-
-    public Task<bool> HasPasswordAsync(UserView user, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    #endregion
+    
 }
 
