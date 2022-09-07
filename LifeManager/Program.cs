@@ -1,4 +1,5 @@
 using LM.Api.Admin;
+using LM.Base.Models;
 using LM.Data;
 using Microsoft.AspNetCore.Identity;
 
@@ -6,12 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 // Add services to the container.
 var services = builder.Services;
+
 services.AddControllers();
+services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddDataService(Configuration.GetConnectionString("ConnectionStringLifeManager"));
-services.AddIdentityCore<UserView>(opt =>
+services.AddIdentityCore<UserModel>(opt =>
     {
         opt.Password.RequiredLength = 1;
         opt.Password.RequireNonAlphanumeric = false;
@@ -23,7 +29,7 @@ services.AddIdentityCore<UserView>(opt =>
 
     })
     .AddUserStore<UserService>();
-
+services.AddScoped<IUserService, UserService>();
 services.AddScoped<IPasswordService, PasswordService>();
 services.AddScoped<IAuthorizationService, AuthorizationService>();
 

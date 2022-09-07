@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 
 namespace LM.Data;
+
 /// <summary>
 /// Репозиторий
 /// </summary>
@@ -14,7 +15,7 @@ public interface IRepository<T>
     public Task<T[]> ReadAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Получить по идентификатору
+    /// Получить по условию
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -26,11 +27,26 @@ public interface IRepository<T>
     /// <param name="entity"></param>
     /// <returns></returns>
     public Task<int> SaveAsync(T entity, CancellationToken cancellationToken = default);
-        
+
     /// <summary>
     /// Удалить
     /// </summary>
-    /// <param name="id"></param>
     /// <returns></returns>
     public Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    ///  Удалть выборку
+    /// </summary>
+    /// <param name="func"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task DeleteAsync(Expression<Func<T, bool>> func, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Вставить набор данных
+    /// </summary>
+    /// <param name="items"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task SaveManyAsync(IEnumerable<T> items, CancellationToken cancellationToken = default);
 }

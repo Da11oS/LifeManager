@@ -1,4 +1,6 @@
-﻿namespace LM.Api.Admin;
+﻿using LM.Base.Models;
+
+namespace LM.Api.Admin;
 
 public interface IAuthorizationService
 {
@@ -12,14 +14,14 @@ public record RegisterResult
     public string Error;
     public string JwtToken;
     public bool Success;
-    public UserView User;
+    public UserModel User;
 }
 
 public record LogInResult
 {
     public string Error;
     public bool Success;
-    public UserView User;
+    public UserModel User;
 }
 
 public record LogOutResult

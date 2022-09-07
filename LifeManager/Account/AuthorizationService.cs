@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LM.Base.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace LM.Api.Admin;
 
@@ -34,7 +35,7 @@ public class AuthorizationService : IAuthorizationService
             // TODO: Надо проверить меняет ли объект user внутри
             var hashedPassword = _passwordService.HashPassword(null, password);
             var newGuid = Guid.NewGuid();
-            await _userService.CreateAsync(new UserView
+            await _userService.CreateAsync(new UserModel
             {
                 Id = newGuid,
                 Email = mail,

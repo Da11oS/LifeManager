@@ -20,13 +20,13 @@ namespace LM.Api.Controllers
         }
         
         // GET: api/<AccountController>
-        [HttpPost]
+        [HttpPost("Register")]
         public Task<RegisterResult> RegisterAsync(string mail, string name, string password, CancellationToken cancellationToken = default)
         {
             return _authorizationService.RegisterAsync(mail, name, password, cancellationToken);
         }
         
-        [HttpPost]
+        [HttpPost("Login")]
         public Task<LogInResult> LoginAsync(string mail, string password, CancellationToken cancellationToken = default)
         {
             return _authorizationService.LogInAsync(mail, password, cancellationToken);

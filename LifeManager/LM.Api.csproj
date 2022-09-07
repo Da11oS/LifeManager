@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LM.Base\LM.Base.csproj" />
     <ProjectReference Include="..\LM.BLogic\LM.BLogic.csproj" />
     <ProjectReference Include="..\LM.Data\LM.Data.csproj" />
   </ItemGroup>

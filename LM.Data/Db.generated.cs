@@ -8,6 +8,7 @@
 #pragma warning disable 1573, 1591
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using LinqToDB;
@@ -23,11 +24,38 @@ namespace LM.Data
 	/// </summary>
 	public partial class DbContext : LinqToDB.Data.DataConnection
 	{
-		public ITable<user> user { get { return this.GetTable<user>(); } }
+		public ITable<claims> claims { get { return this.GetTable<claims>(); } }
+		public ITable<user>   user   { get { return this.GetTable<user>(); } }
 
 		protected void InitMappingSchema()
 		{
 		}
+	}
+
+	[Table(Schema="adm", Name="claims")]
+	public partial class claims
+	{
+		[Column(DbType="uuid", DataType=LinqToDB.DataType.Guid), PrimaryKey, NotNull]
+		public Guid id { get; set; } // uuid
+
+		[Column(DbType="uuid", DataType=LinqToDB.DataType.Guid),    Nullable]
+		public Guid? f_user_id { get; set; } // uuid
+
+		[Column(DbType="text", DataType=LinqToDB.DataType.Text),    Nullable]
+		public string c_key { get; set; } // text
+
+		[Column(DbType="text", DataType=LinqToDB.DataType.Text),    Nullable]
+		public string c_value { get; set; } // text
+
+		#region Associations
+
+		/// <summary>
+		/// claims_user_null_fk (adm.user)
+		/// </summary>
+		[Association(ThisKey="f_user_id", OtherKey="id", CanBeNull=true)]
+		public user f_user { get; set; }
+
+		#endregion
 	}
 
 	[Table(Schema="adm", Name="user")]
@@ -50,5 +78,20 @@ namespace LM.Data
 
 		[Column(DbType="text",     DataType=LinqToDB.DataType.Text) ,    Nullable]
 		public string normalize_name { get; set; } // text
+	}
+
+	public static partial class TableExtensions
+	{
+		public static claims Find(this ITable<claims> table, Guid id)
+		{
+			return table.FirstOrDefault(t =>
+				t.id == id);
+		}
+
+		public static user Find(this ITable<user> table, Guid id)
+		{
+			return table.FirstOrDefault(t =>
+				t.id == id);
+		}
 	}
 }

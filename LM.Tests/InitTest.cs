@@ -1,4 +1,5 @@
 ﻿using LM.Api.Admin;
+using LM.Base.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ namespace LM.Tests
                 ServiceCollection services = new ServiceCollection();
 
                 services.AddDataService(Configuration.GetConnectionString("ConnectionStringLifeManager"));
-                services.AddIdentityCore<UserView>(opt =>
+                services.AddIdentityCore<UserModel>(opt =>
                     {
                         opt.Password.RequiredLength = 1;
                         opt.Password.RequireNonAlphanumeric = false;

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LM.Base.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace LM.Api.Admin;
 
-public interface IPasswordService : IPasswordHasher<UserView>
+public interface IPasswordService : IPasswordHasher<UserModel>
 {
     
 }
