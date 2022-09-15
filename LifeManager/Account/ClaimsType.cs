@@ -1,8 +1,9 @@
 ﻿namespace LM.Base.Admin;
 
-public class ClaimsType
+public class CustomClaimsType
 {
     public static string Mail => "mail";
     public static string Name => "name";
-    public static string RestoreJwt => "restore_jwt";
+
+    public static string RestoreToken => "restore_token";
 }

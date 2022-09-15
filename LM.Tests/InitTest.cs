@@ -43,9 +43,15 @@ namespace LM.Tests
                     })
                     .AddUserStore<UserService>()
                     .AddPasswordValidator<UserService>();
-                services.AddLogging(configure => configure.AddDebug());
+                services.AddSingleton(Configuration);
+                services.AddScoped<IUserService, UserService>();
+                services.AddScoped<IPasswordService, PasswordService>();
+                services.AddScoped<IAuthorizationService, AuthorizationService>();
+                services.AddScoped<IUserRepository, UserRepository>();
+                services.AddScoped<IClaimsRepository, ClaimsRepository>();
+                services.AddScoped<IJwtService, JwtService>();
 
-                _provider = services.BuildServiceProvider();
+            _provider = services.BuildServiceProvider();
             }
 
             return _provider;

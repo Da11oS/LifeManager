@@ -1,27 +1,27 @@
-﻿using LM.Base.Models;
+﻿using System.Security.Claims;
+using LM.Base.Models;
 
 namespace LM.Api.Admin;
 
 public interface IAuthorizationService
 {
     public Task<RegisterResult> RegisterAsync(string mail, string name, string password, CancellationToken cancellationToken);
-    public Task<LogInResult> LogInAsync(string mail, string password, CancellationToken cancellationToken);
+    public Task<LoginResult> LoginAsync(string mail, string password, CancellationToken cancellationToken);
     public Task<LogOutResult> LogOutAsync(string mail, string password, CancellationToken cancellationToken);
 }
 
 public record RegisterResult
 {
     public string Error;
-    public string JwtToken;
-    public bool Success;
-    public UserModel User;
+    public string AccessToken;
+    public Claim[] Claims;
 }
 
-public record LogInResult
+public record LoginResult
 {
     public string Error;
-    public bool Success;
-    public UserModel User;
+    public Claim[] Claims;
+    public string AccessToken;
 }
 
 public record LogOutResult

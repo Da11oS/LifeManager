@@ -27,11 +27,12 @@ namespace LM.Api.Controllers
         }
         
         [HttpPost("Login")]
-        public Task<LogInResult> LoginAsync(string mail, string password, CancellationToken cancellationToken = default)
+        public Task<LoginResult> LoginAsync(string mail, string password, CancellationToken cancellationToken = default)
         {
-            return _authorizationService.LogInAsync(mail, password, cancellationToken);
+            return _authorizationService.LoginAsync(mail, password, cancellationToken);
         }
         
+        [Authorize]
         [HttpPost]
         public void Post([FromBody] string value)
         {

@@ -1,4 +1,8 @@
-﻿using LM.Base.Models;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using LM.Base.Admin;
+using LM.Base.Models;
+using LM.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace LM.Api.Admin;
@@ -7,13 +11,19 @@ public class AuthorizationService : IAuthorizationService
 {
     private readonly IUserService _userService;
     private readonly IPasswordService _passwordService;
-    public AuthorizationService(IPasswordService passwordService, IUserService userService)
+    private readonly IJwtService _jwtService;
+    private readonly DbContext _ctx;
+
+    public AuthorizationService(IPasswordService passwordService, IUserService userService, DbContext ctx, IJwtService jwtService)
     {
         _passwordService = passwordService;
         _userService = userService;
+        _ctx = ctx;
+        _jwtService = jwtService;
     }
 
-    public async Task<RegisterResult> RegisterAsync(string mail, string name, string password, CancellationToken cancellationToken)
+    public async Task<RegisterResult> RegisterAsync(string mail, string name, string password,
+        CancellationToken cancellationToken)
     {
         var user = await _userService.FindByNameOrMailAsync(name.ToLower(), mail, cancellationToken);
 
@@ -30,54 +40,76 @@ public class AuthorizationService : IAuthorizationService
             }
         }
 
+        var tr = await _ctx.BeginTransactionAsync(cancellationToken);
         try
         {
             // TODO: Надо проверить меняет ли объект user внутри
             var hashedPassword = _passwordService.HashPassword(null, password);
             var newGuid = Guid.NewGuid();
-            await _userService.CreateAsync(new UserModel
+            var newUser = new UserModel
             {
                 Id = newGuid,
                 Email = mail,
                 PasswordHash = hashedPassword,
                 UserName = name,
                 NormalizedUserName = name.ToLower()
-            }, cancellationToken);
+            };
 
+            var res = await _userService.CreateAsync(newUser, cancellationToken);
+            if (!res.Succeeded)
+            {
+                throw new NotImplementedException(String.Join("", res.Errors.Select(s => s.Description), "\n"));
+            }
+            var refreshToken = _jwtService.CreateRefreshToken(newUser); 
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.NameId, newUser.UserName),
+                new Claim(CustomClaimsType.RestoreToken, refreshToken),
+            };
+            await _userService.AddClaimsAsync(newUser,
+                claims, cancellationToken);
+
+            tr.CommitAsync(cancellationToken);
+
+            var userClaims = await _userService.GetClaimsAsync(newUser, cancellationToken);
+            var jwt = _jwtService.CreateAccessToken(newUser); 
             return new RegisterResult()
             {
-                Success = true
+                Claims = userClaims.ToArray(),
+                
             };
         }
         catch (Exception e)
         {
+            tr.RollbackAsync(cancellationToken);
             return new RegisterResult()
             {
                 Error = e.Message,
-                Success = false
             };
         }
     }
 
-    public async Task<LogInResult> LogInAsync(string mail, string password, CancellationToken cancellationToken)
+    public async Task<LoginResult> LoginAsync(string mail, string password, CancellationToken cancellationToken)
     {
         var user = await _userService.FindByMailAsync(mail, cancellationToken);
         if (user == null)
             throw new NotImplementedException($"Пользователя с почтой {mail} не существует!");
-        
-        if (_passwordService.VerifyHashedPassword(user, user.PasswordHash, password) 
+
+        if (_passwordService.VerifyHashedPassword(user, user.PasswordHash, password)
             == PasswordVerificationResult.Success)
         {
-            return new LogInResult()
+            var userClaims = await _userService.GetClaimsAsync(user, cancellationToken);
+            var jwt = _jwtService.CreateAccessToken(user);
+            return new LoginResult()
             {
-                Success = true,
-                User = user,
+                Claims = userClaims.ToArray(),
+                AccessToken = jwt
+
             };
         }
-        
-        return new LogInResult()
+
+        return new LoginResult()
         {
-            Success = false,
             Error = "Не верно введен пароль!"
         };
     }
