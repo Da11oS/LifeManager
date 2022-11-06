@@ -64,7 +64,7 @@ public class AuthorizationService : IAuthorizationService
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.NameId, newUser.UserName),
-                new Claim(CustomClaimsType.RestoreToken, refreshToken),
+                new Claim(CustomClaimsType.RefreshToken, refreshToken),
             };
             await _userService.AddClaimsAsync(newUser,
                 claims, cancellationToken);
