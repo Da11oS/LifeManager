@@ -24,8 +24,9 @@ namespace LM.Data
 	/// </summary>
 	public partial class DbContext : LinqToDB.Data.DataConnection
 	{
-		public ITable<claims> claims { get { return this.GetTable<claims>(); } }
-		public ITable<user>   user   { get { return this.GetTable<user>(); } }
+		public ITable<claims>       claims       { get { return this.GetTable<claims>(); } }
+		public ITable<refresh_keys> refresh_keys { get { return this.GetTable<refresh_keys>(); } }
+		public ITable<user>         user         { get { return this.GetTable<user>(); } }
 
 		protected void InitMappingSchema()
 		{
@@ -56,6 +57,22 @@ namespace LM.Data
 		public user f_user { get; set; }
 
 		#endregion
+	}
+
+	[Table(Schema="adm", Name="refresh_keys")]
+	public partial class refresh_keys
+	{
+		[Column(DbType="text",                            DataType=LinqToDB.DataType.Text)     , NotNull]
+		public string key { get; set; } // text
+
+		[Column(DbType="uuid",                            DataType=LinqToDB.DataType.Guid)     ,    Nullable]
+		public Guid? f_user_id { get; set; } // uuid
+
+		[Column(DbType="timestamp (6) without time zone", DataType=LinqToDB.DataType.DateTime2, Precision=6),    Nullable]
+		public DateTime? n_expires { get; set; } // timestamp (6) without time zone
+
+		[Column(DbType="integer",                         DataType=LinqToDB.DataType.Int32,     Precision=32, Scale=0),    Nullable]
+		public int? id { get; set; } // integer
 	}
 
 	[Table(Schema="adm", Name="user")]

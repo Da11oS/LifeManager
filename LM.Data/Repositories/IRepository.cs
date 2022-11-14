@@ -12,7 +12,12 @@ public interface IRepository<T>
     /// Получить всё
     /// </summary>
     /// <returns></returns>
-    public Task<T[]> ReadAsync(CancellationToken cancellationToken = default);
+    public Task<T[]> ReadAsync(CancellationToken cancellationToken = default); 
+    /// <summary>
+    /// Проверка на сучествоание
+    /// </summary>
+    /// <returns></returns>
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> func, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Получить по условию

@@ -1,4 +1,5 @@
 ﻿using LinqToDB.Configuration;
+using LM.Data.RefreshKeys;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LM.Data;
@@ -15,6 +16,7 @@ public static class DataServiceExtension
         
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRefreshKeysRepository, RefreshKeysRepository>();
 
 
         // services.AddTransient<IRoleStore<IdentityRole>, FakeRoleStore>();

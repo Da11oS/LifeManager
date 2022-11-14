@@ -60,12 +60,12 @@ public class AuthorizationService : IAuthorizationService
             {
                 throw new NotImplementedException(String.Join("", res.Errors.Select(s => s.Description), "\n"));
             }
-            var refreshToken = _jwtService.CreateRefreshToken(newUser); 
+            
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.NameId, newUser.UserName),
-                new Claim(CustomClaimsType.RefreshToken, refreshToken),
             };
+            
             await _userService.AddClaimsAsync(newUser,
                 claims, cancellationToken);
 
@@ -73,10 +73,16 @@ public class AuthorizationService : IAuthorizationService
 
             var userClaims = await _userService.GetClaimsAsync(newUser, cancellationToken);
             var jwt = _jwtService.CreateAccessToken(newUser); 
+            var updatedRefreshToken = await _jwtService.UpdateRefreshTokenAsync(new refresh_keys()
+            {
+                f_user_id = newUser.Id
+            }, cancellationToken); 
+            
             return new RegisterResult()
             {
                 Claims = userClaims.ToArray(),
-                
+                AccessToken = jwt,
+                RefreshToken = updatedRefreshToken.key
             };
         }
         catch (Exception e)
@@ -100,11 +106,17 @@ public class AuthorizationService : IAuthorizationService
         {
             var userClaims = await _userService.GetClaimsAsync(user, cancellationToken);
             var jwt = _jwtService.CreateAccessToken(user);
+            var oldRefreshToken = await _jwtService.GetRefreshToken(user);
+            var updatedRefreshToken = await _jwtService.UpdateRefreshTokenAsync(oldRefreshToken ?? new refresh_keys()
+            {
+                f_user_id = user.Id
+            }, cancellationToken); 
+            
             return new LoginResult()
             {
                 Claims = userClaims.ToArray(),
-                AccessToken = jwt
-
+                AccessToken = jwt,
+                RefreshToken = updatedRefreshToken.key
             };
         }
 

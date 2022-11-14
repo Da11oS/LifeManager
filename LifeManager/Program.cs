@@ -1,4 +1,5 @@
 using System.Text;
+using LM.Api;
 using LM.Api.Admin;
 using LM.Base.Models;
 using LM.Data;
@@ -7,9 +8,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-var Configuration = builder.Configuration;
+var Configuration = builder.Configuration
+                            .AddJsonFile("appsettings.json", 
+                                            optional: false, 
+                                            reloadOnChange: true)
+                            .Build();
+
+
 // Add services to the container.
 var services = builder.Services;
+
+var authsSection = Configuration.GetSection("Auths");
+services.Configure<Auths>(authsSection);
 
 services.AddControllers();
 services.AddControllersWithViews()

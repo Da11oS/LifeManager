@@ -12,6 +12,9 @@ public class Repository<T>: IRepository<T> where T: class
         _ctx = context;
     }
 
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> func, CancellationToken cancellationToken = default)
+        => _ctx.GetTable<T>().AnyAsync(func, cancellationToken);
+
     public Task<T?> Get(Expression<Func<T, bool>> func, CancellationToken cancellationToken = default) 
         => _ctx.GetTable<T>().FirstOrDefaultAsync(func, cancellationToken);
 

@@ -14,6 +14,7 @@ public record RegisterResult
 {
     public string Error;
     public string AccessToken;
+    public string RefreshToken;
     public Claim[] Claims;
 }
 
@@ -22,6 +23,8 @@ public record LoginResult
     public string Error;
     public Claim[] Claims;
     public string AccessToken;
+    public string RefreshToken;
+
 }
 
 public record LogOutResult

@@ -8,21 +8,46 @@ namespace LM.Api.Admin;
 public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IConfiguration _configuration;
-
-    public JwtMiddleware(RequestDelegate next, IConfiguration configuration)
+    private readonly IJwtService _jwtService;
+    private readonly IUserService _userService;
+    private readonly Auths _auths;
+    public JwtMiddleware(RequestDelegate next, IJwtService jwtService, IUserService userService, Auths auths)
     {
         this._next = next;
-        _configuration = configuration;
+        _jwtService = jwtService;
+        _userService = userService;
+        _auths = auths;
     }
 
-    public async Task InvokeAsync(HttpContext context, IUserService userService)
+    public async Task InvokeAsync(HttpContext context, CancellationToken cancellationToken = default)
     {
         var token = context.Request.Headers["Authorization"]
             .FirstOrDefault()?.Split(" ").Last();
+        var refreshToken = context.Request.Headers["refresh-key"]
+            .FirstOrDefault();
+        
         try
         {
-            AttachUserToContext(context, userService, token);
+            var valideatedAccessToken = GetValidatedToken(token);
+            var now = DateTime.Now;
+            var accesTokenDiff = now - valideatedAccessToken.ValidTo;
+            var jwtToken = (JwtSecurityToken) valideatedAccessToken;
+            var userMail = jwtToken.Claims.First(x => x.Type == CustomClaimsType.Mail).Value;
+            var user = await _userService.FindByMailAsync(userMail, cancellationToken);
+            var isValidRefreshToken = await _jwtService.IsValidRefreshToken(refreshToken ?? "", user.Id, cancellationToken);
+            if (accesTokenDiff.Seconds <= 0 &&  user != null && isValidRefreshToken)
+            {
+                var newAccessToken = await GetNewAccessTokenAsync(valideatedAccessToken);
+                var currentUserToken = await  _jwtService.GetRefreshToken(user);
+                var newRefreshToken = await _jwtService.UpdateRefreshTokenAsync(currentUserToken, cancellationToken);
+                context.Response.Headers.Append("Authorization", newAccessToken); 
+                context.Response.Headers.Append("refresh-key", newRefreshToken?.key);
+            }
+            else
+            {
+                throw new NotImplementedException("Необходимо пройти повторную авторизацию");
+            }
+            context.Items["User"] = user;
         }
         finally
         {
@@ -30,30 +55,32 @@ public class JwtMiddleware
         }
     }
 
-    public void AttachUserToContext(HttpContext context, IUserService userService, string token)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    private async Task<string> GetNewAccessTokenAsync(SecurityToken validatedToken)
     {
-        try
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            // min 16 characters
-            var key = Encoding.ASCII.GetBytes(_configuration["AuthKey"]);
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ClockSkew = TimeSpan.Zero
-            }, out var validatedToken);
+        var jwtToken = (JwtSecurityToken) validatedToken;
+        var userMail = jwtToken.Claims.First(x => x.Type == CustomClaimsType.Mail).Value;
+        var user = await _userService.FindByMailAsync(userMail);
+        return _jwtService.CreateAccessToken(user);
+    }
 
-            var jwtToken = (JwtSecurityToken) validatedToken;
-            var userMail = jwtToken.Claims.First(x => x.Type == CustomClaimsType.Mail).Value;
+    private SecurityToken? GetValidatedToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key =   Encoding.ASCII.GetBytes(_auths.TokenKey);
 
-            context.Items["User"] = userService.FindByMailAsync(userMail).GetAwaiter().GetResult();
-        }
-        catch (Exception ex)
+        tokenHandler.ValidateToken(token, new TokenValidationParameters
         {
-            Console.WriteLine(ex.Message);
-        }
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
+        }, out var validatedToken);
+
+        return validatedToken;
     }
 }
