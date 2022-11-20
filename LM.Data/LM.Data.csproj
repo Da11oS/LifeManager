@@ -18,27 +18,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Db.generated.cs</LastGenOutput>
     </None>
-    <None Update="scaffold.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>scaffold.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Db.generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Db.tt</DependentUpon>
-    </Compile>
-    <Compile Update="scaffold.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>scaffold.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

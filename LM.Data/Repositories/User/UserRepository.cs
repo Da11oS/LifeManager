@@ -1,16 +1,17 @@
-﻿using LinqToDB;
+﻿using DataModel;
+using LinqToDB;
 
 namespace LM.Data;
 
-public class UserRepository : Repository<user>, IUserRepository
+public class UserRepository : Repository<AdmSchema.User>, IUserRepository
 {
-    public UserRepository(DbContext context) : base(context)
+    public UserRepository(LifeManagerDb context) : base(context)
     {
     }
 
-    public Task<user?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+    public Task<AdmSchema.User?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
-        return _ctx.user.FirstOrDefaultAsync(f => f.normalize_name == normalizedUserName, cancellationToken);
+        return _ctx.Adm.Users.FirstOrDefaultAsync(f => f.NormalizeName == normalizedUserName, cancellationToken);
     }
     
 }

@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using DataModel;
 using LM.Base.Admin;
 using LM.Base.Models;
 using LM.Data;
@@ -12,9 +13,10 @@ public class AuthorizationService : IAuthorizationService
     private readonly IUserService _userService;
     private readonly IPasswordService _passwordService;
     private readonly IJwtService _jwtService;
-    private readonly DbContext _ctx;
+    private readonly LifeManagerDb _ctx;
 
-    public AuthorizationService(IPasswordService passwordService, IUserService userService, DbContext ctx, IJwtService jwtService)
+    public AuthorizationService(IPasswordService passwordService, IUserService userService, LifeManagerDb ctx,
+        IJwtService jwtService)
     {
         _passwordService = passwordService;
         _userService = userService;
@@ -60,29 +62,29 @@ public class AuthorizationService : IAuthorizationService
             {
                 throw new NotImplementedException(String.Join("", res.Errors.Select(s => s.Description), "\n"));
             }
-            
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.NameId, newUser.UserName),
             };
-            
+
             await _userService.AddClaimsAsync(newUser,
                 claims, cancellationToken);
 
             tr.CommitAsync(cancellationToken);
 
             var userClaims = await _userService.GetClaimsAsync(newUser, cancellationToken);
-            var jwt = _jwtService.CreateAccessToken(newUser); 
-            var updatedRefreshToken = await _jwtService.UpdateRefreshTokenAsync(new refresh_keys()
+            var jwt = _jwtService.CreateAccessToken(newUser);
+            var updatedRefreshToken = await _jwtService.UpdateRefreshTokenAsync(new AdmSchema.RefreshKey()
             {
-                f_user_id = newUser.Id
-            }, cancellationToken); 
-            
+                FUserId = newUser.Id
+            }, cancellationToken);
+
             return new RegisterResult()
             {
                 Claims = userClaims.ToArray(),
                 AccessToken = jwt,
-                RefreshToken = updatedRefreshToken.key
+                RefreshToken = updatedRefreshToken.Key
             };
         }
         catch (Exception e)
@@ -107,16 +109,17 @@ public class AuthorizationService : IAuthorizationService
             var userClaims = await _userService.GetClaimsAsync(user, cancellationToken);
             var jwt = _jwtService.CreateAccessToken(user);
             var oldRefreshToken = await _jwtService.GetRefreshToken(user);
-            var updatedRefreshToken = await _jwtService.UpdateRefreshTokenAsync(oldRefreshToken ?? new refresh_keys()
-            {
-                f_user_id = user.Id
-            }, cancellationToken); 
-            
+            var updatedRefreshToken = await _jwtService.UpdateRefreshTokenAsync(oldRefreshToken ??
+                new AdmSchema.RefreshKey()
+                {
+                    FUserId = user.Id
+                }, cancellationToken);
+
             return new LoginResult()
             {
                 Claims = userClaims.ToArray(),
                 AccessToken = jwt,
-                RefreshToken = updatedRefreshToken.key
+                RefreshToken = updatedRefreshToken.Key
             };
         }
 

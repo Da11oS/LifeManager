@@ -1,12 +1,14 @@
-﻿namespace LM.Data.RefreshKeys;
+﻿using DataModel;
 
-public interface IRefreshKeysRepository: IRepository<refresh_keys>
+namespace LM.Data.RefreshKeys;
+
+public interface IRefreshKeysRepository: IRepository<AdmSchema.RefreshKey>
 {
 }
 
-public class RefreshKeysRepository: Repository<refresh_keys>, IRefreshKeysRepository
+public class RefreshKeysRepository: Repository<AdmSchema.RefreshKey>, IRefreshKeysRepository
 {
-    public RefreshKeysRepository(DbContext context) : base(context)
+    public RefreshKeysRepository(LifeManagerDb context) : base(context)
     {
     }
 

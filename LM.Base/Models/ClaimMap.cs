@@ -1,25 +1,26 @@
 ﻿using System.Security.Claims;
+using DataModel;
 using LM.Data;
 
 namespace LM.Api.Views;
 
 public static class ClaimMap
 {
-    public static Claim Map(this claims model)
+    public static Claim Map(this AdmSchema.Claim model)
     {
-        return new Claim(model.c_key, model.c_value);
+        return new Claim(model.CKey, model.CValue);
     }
     
-    public static claims Map(this Claim model)
+    public static AdmSchema.Claim Map(this Claim model)
     {
         throw new NotImplementedException();
-        return new claims
+        return new AdmSchema.Claim
         {
-            id = default,
-            f_user_id = null,
-            c_key = null,
-            c_value = null,
-            f_user = null
+            Id = default,
+            FUserId = null,
+            CKey = null,
+            CValue = null,
+            FUser = null
         };
     }
 }

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using DataModel;
 using LM.Base.Models;
 using LM.Data;
 using LM.Data.RefreshKeys;
@@ -41,23 +42,23 @@ public class JwtService : IJwtService
         return tokenHandler.WriteToken(token);
     }
 
-    public Task<refresh_keys?> GetRefreshToken(UserModel user)
+    public Task<AdmSchema.RefreshKey?> GetRefreshToken(UserModel user)
     {
         return _refreshKeysRepository
-            .Get((key) => key.f_user_id == user.Id);
+            .Get((key) => key.FUserId == user.Id);
     }
 
-    public async Task<refresh_keys?> UpdateRefreshTokenAsync(refresh_keys token,
+    public async Task<AdmSchema.RefreshKey?> UpdateRefreshTokenAsync(AdmSchema.RefreshKey token,
         CancellationToken cancellationToken = default)
     {
         var key = Guid.NewGuid();
         var newToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(key.ToString()));
-        var updatedKey = new refresh_keys
+        var updatedKey = new AdmSchema.RefreshKey
         {
-            id = token.id,
-            key = newToken,
-            n_expires = DateTime.Now.AddMilliseconds(_authsConfig.RefreshLifeTimeMs),
-            f_user_id = token.f_user_id
+            Id = token.Id,
+            Key = newToken,
+            NExpires = DateTime.Now.AddMilliseconds(_authsConfig.RefreshLifeTimeMs),
+            FUserId = token.FUserId
         };
         
         await _refreshKeysRepository.SaveAsync(updatedKey);
@@ -69,9 +70,9 @@ public class JwtService : IJwtService
     {
         DateTime now = DateTime.Now;
         return _refreshKeysRepository
-            .AnyAsync((key) => key.key == refreshToken 
-                               && key.f_user_id == userId
-                && key.n_expires <= now, cancellationToken);
+            .AnyAsync((key) => key.Key == refreshToken 
+                               && key.FUserId == userId
+                && key.NExpires <= now, cancellationToken);
     }
     
     

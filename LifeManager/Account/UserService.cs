@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Security.Cryptography;
+using DataModel;
 using LM.Api.Views;
 using LM.Base.Models;
 using LM.Data;
@@ -106,7 +107,7 @@ public class UserService : IUserService
 
     public async Task<UserModel> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-        var res = await _usersRepository.Get((u) => u.id.ToString() == userId, cancellationToken);
+        var res = await _usersRepository.Get((u) => u.Id.ToString() == userId, cancellationToken);
         
         return res?.Map();
     }
@@ -114,21 +115,21 @@ public class UserService : IUserService
 
     public async Task<UserModel> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
     {
-        var res = await _usersRepository.Get((u) => u.normalize_name == normalizedUserName, cancellationToken);
+        var res = await _usersRepository.Get((u) => u.NormalizeName == normalizedUserName, cancellationToken);
         
         return res?.Map();
     }
     
     public async Task<UserModel> FindByMailAsync(string mail, CancellationToken cancellationToken)
     {
-        var res = await _usersRepository.Get((u) => u.mail == mail, cancellationToken);
+        var res = await _usersRepository.Get((u) => u.Mail == mail, cancellationToken);
         
         return res?.Map();
     }
 
     public async Task<UserModel> FindByNameOrMailAsync(string normalizedName, string mail, CancellationToken cancellationToken)
     {
-        var res = await _usersRepository.Get((u) => u.mail == mail || u.normalize_name == normalizedName, cancellationToken);
+        var res = await _usersRepository.Get((u) => u.Mail == mail || u.NormalizeName == normalizedName, cancellationToken);
         
         return res?.Map();    
     }
@@ -145,12 +146,12 @@ public class UserService : IUserService
 
     public Task AddClaimsAsync(UserModel user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
     {
-        var items = claims.Select(s => new claims
+        var items = claims.Select(s => new AdmSchema.Claim()
         {
-            id = default,
-            f_user_id = user.Id,
-            c_key = s.Type,
-            c_value = s.Value,
+            Id = default,
+            FUserId = user.Id,
+            CKey = s.Type,
+            CValue = s.Value,
         });
         return _claimsRepository.SaveManyAsync(items, cancellationToken);
     }
@@ -158,15 +159,15 @@ public class UserService : IUserService
     public async Task ReplaceClaimAsync(UserModel user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
     {
         var dbclaim = await _claimsRepository
-            .Get(g => g.f_user_id == user.Id 
-                      && g.c_key == claim.Type,cancellationToken);
+            .Get(g => g.FUserId == user.Id 
+                      && g.CKey == claim.Type,cancellationToken);
 
-        await _claimsRepository.SaveAsync(new claims
+        await _claimsRepository.SaveAsync(new AdmSchema.Claim()
         {
-            id = dbclaim.id,
-            f_user_id = dbclaim.id,
-            c_key = newClaim.Type,
-            c_value = newClaim.Value,
+            Id = dbclaim.Id,
+            FUserId = dbclaim.Id,
+            CKey = newClaim.Type,
+            CValue = newClaim.Value,
         }, cancellationToken);
     }
 
@@ -174,8 +175,8 @@ public class UserService : IUserService
     {
         var claimsTypes = claims.Select(s => s.Type);
         return _claimsRepository
-            .DeleteAsync(d => d.f_user_id == user.Id 
-                              && claimsTypes.Contains(d.c_key)
+            .DeleteAsync(d => d.FUserId == user.Id 
+                              && claimsTypes.Contains(d.CKey)
                 , cancellationToken);
     }
 

@@ -1,25 +1,26 @@
 ﻿using System.Security.Claims;
+using DataModel;
 using LinqToDB;
 
 namespace LM.Data;
 
-public class ClaimsRepository : Repository<claims>, IClaimsRepository
+public class ClaimsRepository : Repository<AdmSchema.Claim>, IClaimsRepository
 {
-    public ClaimsRepository(DbContext context) : base(context)
+    public ClaimsRepository(LifeManagerDb context) : base(context)
     {
     }
 
-    public async Task<IList<claims>> FindByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IList<AdmSchema.Claim>> FindByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var res = await _ctx.claims.Where(w => w.f_user_id == userId).ToListAsync(cancellationToken); 
+        var res = await _ctx.Adm.Claims.Where(w => w.FUserId == userId).ToListAsync(cancellationToken); 
         return res;
     }
 
-    public async Task<IList<user>> GetUsersForClaimsAsync(string claimType, CancellationToken cancellationToken = default)
+    public async Task<IList<AdmSchema.User>> GetUsersForClaimsAsync(string claimType, CancellationToken cancellationToken = default)
     {
-        var res = await _ctx.claims
-            .Where(w => w.c_key == claimType)
-            .Select(s => s.f_user)
+        var res = await _ctx.Adm.Claims
+            .Where(w => w.CKey == claimType)
+            .Select(s => s.FUser)
             .ToListAsync(cancellationToken); 
         return res;
     }

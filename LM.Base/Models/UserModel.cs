@@ -1,4 +1,5 @@
-﻿using LM.Data;
+﻿using DataModel;
+using LM.Data;
 
 namespace LM.Base.Models;
 
@@ -13,27 +14,27 @@ public record UserModel
 
 public static class UserMap
 {
-    public static user Map(this UserModel identity)
+    public static AdmSchema.User Map(this UserModel identity)
     {
-        return new user
+        return new AdmSchema.User
         {
-            id = identity.Id,
-            mail = identity.Email,
-            normalize_name = identity.NormalizedUserName,
-            password = identity.PasswordHash,
-            user_name = identity.UserName
+            Id = identity.Id,
+            Mail = identity.Email,
+            NormalizeName = identity.NormalizedUserName,
+            Password = identity.PasswordHash,
+            UserName = identity.UserName
         };
     }
     
-    public static UserModel Map(this user user)
+    public static UserModel Map(this AdmSchema.User user)
     {
         return new UserModel
         {
-            Id = user.id,
-            Email = user.mail,
-            NormalizedUserName = user.normalize_name,
-            PasswordHash = user.password,
-            UserName = user.user_name
+            Id = user.Id,
+            Email = user.Mail,
+            NormalizedUserName = user.NormalizeName,
+            PasswordHash = user.Password,
+            UserName = user.UserName
         };
     }
 }

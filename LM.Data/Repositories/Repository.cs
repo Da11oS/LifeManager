@@ -1,13 +1,14 @@
 ﻿using LinqToDB;
 using System.Linq.Expressions;
+using DataModel;
 using LinqToDB.Data;
 
 namespace LM.Data;
 public class Repository<T>: IRepository<T> where T: class
 {
-    protected readonly  DbContext _ctx;
+    protected readonly  LifeManagerDb _ctx;
 
-    public Repository(DbContext context)
+    public Repository(LifeManagerDb context)
     {
         _ctx = context;
     }

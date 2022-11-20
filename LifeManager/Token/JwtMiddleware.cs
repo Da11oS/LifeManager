@@ -41,7 +41,7 @@ public class JwtMiddleware
                 var currentUserToken = await  _jwtService.GetRefreshToken(user);
                 var newRefreshToken = await _jwtService.UpdateRefreshTokenAsync(currentUserToken, cancellationToken);
                 context.Response.Headers.Append("Authorization", newAccessToken); 
-                context.Response.Headers.Append("refresh-key", newRefreshToken?.key);
+                context.Response.Headers.Append("refresh-key", newRefreshToken?.Key);
             }
             else
             {

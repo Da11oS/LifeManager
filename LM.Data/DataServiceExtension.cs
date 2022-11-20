@@ -1,4 +1,5 @@
-﻿using LinqToDB.Configuration;
+﻿using DataModel;
+using LinqToDB.Configuration;
 using LM.Data.RefreshKeys;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,7 @@ public static class DataServiceExtension
     /// <returns></returns>
     public static IServiceCollection AddDataService(this IServiceCollection services, string connetctionString)
     {
-        services.AddScoped<LM.Data.DbContext>();
+        services.AddScoped<LifeManagerDb>();
         
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUserRepository, UserRepository>();
