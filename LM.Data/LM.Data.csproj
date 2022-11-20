@@ -7,14 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="linq2db" Version="4.3.0" />
     <PackageReference Include="linq2db.AspNet" Version="4.1.1" />
     <PackageReference Include="linq2db.PostgreSQL" Version="4.1.1" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Db.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Db.generated.cs</LastGenOutput>
+    </None>
+    <None Update="scaffold.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>scaffold.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -28,6 +34,19 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Db.tt</DependentUpon>
     </Compile>
+    <Compile Update="scaffold.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>scaffold.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DbContext.cs\" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet linq2db scaffold -i database.json" />
+  </Target>
 
 </Project>

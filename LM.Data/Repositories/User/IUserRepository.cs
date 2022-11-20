@@ -1,4 +1,5 @@
-﻿namespace LM.Data;
+﻿
+namespace LM.Data;
 
 public interface IUserRepository : IRepository<user>
 {
