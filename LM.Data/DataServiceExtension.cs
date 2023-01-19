@@ -11,25 +11,24 @@ public static class DataServiceExtension
     /// </summary>
     /// <param name="services">The services.</param>
     /// <returns></returns>
-    public static IServiceCollection AddDataService(this IServiceCollection services, string connetctionString)
+    public static IServiceCollection AddDataService(this IServiceCollection services, string connectionString)
     {
-        services.AddScoped<LifeManagerDb>();
+        
         
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshKeysRepository, RefreshKeysRepository>();
 
 
-        // services.AddTransient<IRoleStore<IdentityRole>, FakeRoleStore>();
         var polyConnectionOptBuilder = new LinqToDBConnectionOptionsBuilder()
-            .UsePostgreSQL(connetctionString);
+            .UsePostgreSQL(connectionString);
 
-        var polyConnectionOptions = new LinqToDBConnectionOptions(polyConnectionOptBuilder);
-
-        LM.Data.DbContextOptions dbContextOptions = new(polyConnectionOptions);
-
-        services.AddSingleton(dbContextOptions);
-
+        var polyConnectionOptions = new LinqToDBConnectionOptions<LifeManagerDb>(polyConnectionOptBuilder);
+        
+        services.AddSingleton(polyConnectionOptions);
+        
+        services.AddScoped<LifeManagerDb>();
+        
         return services;
     }
 }

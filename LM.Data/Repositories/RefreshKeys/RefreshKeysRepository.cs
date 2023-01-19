@@ -11,6 +11,4 @@ public class RefreshKeysRepository: Repository<AdmSchema.RefreshKey>, IRefreshKe
     public RefreshKeysRepository(LifeManagerDb context) : base(context)
     {
     }
-
-    
 }

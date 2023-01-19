@@ -2,7 +2,7 @@
     "general": {
         "provider": "PostgreSQL",
         "connection": "Server=localhost;Port=5432;Database=life_manager; User Id=postgres; Password=postgres; Command Timeout=120; Minimum Pool Size=2; Maximum Pool Size=10;",
-        "output": ".\\DbContext.cs",
+        "output": ".\\DbContext",
         "overwrite": true
     }
 }

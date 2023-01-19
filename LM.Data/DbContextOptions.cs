@@ -1,13 +1,14 @@
-﻿using LinqToDB.Configuration;
+﻿using DataModel;
+using LinqToDB.Configuration;
 namespace LM.Data;
 
 public class DbContextOptions
 {
-    internal string PolyConnectionString { get; }
-    internal LinqToDBConnectionOptions PolyConnectionOptions { get; }
-    internal DbContextOptions(LinqToDBConnectionOptions connectionOptions)
+    internal string ConnectionString { get; }
+    internal LinqToDBConnectionOptions<LifeManagerDb> PolyConnectionOptions { get; }
+    internal DbContextOptions(LinqToDBConnectionOptions<LifeManagerDb> connectionOptions)
     {
-        PolyConnectionString = connectionOptions.ConnectionString ??
+        ConnectionString = connectionOptions.ConnectionString ??
                                throw new ArgumentNullException(nameof(connectionOptions));
         PolyConnectionOptions = connectionOptions;
     }

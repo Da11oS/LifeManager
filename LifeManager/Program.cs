@@ -18,9 +18,9 @@ var Configuration = builder.Configuration
 // Add services to the container.
 var services = builder.Services;
 
-var authsSection = Configuration.GetSection("Auths");
-services.Configure<Auths>(authsSection);
-
+ var authsSection = Configuration.GetSection(nameof(Auths)).Get<Auths>();
+//services.Configure<Auths>(authsSection);
+services.AddSingleton(authsSection);
 services.AddControllers();
 services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
@@ -30,9 +30,9 @@ services.AddControllersWithViews()
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddDataService(Configuration.GetConnectionString("ConnectionStringLifeManager"));
+services.AddScoped<IJwtService, JwtService>();
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<IClaimsRepository, ClaimsRepository>();
-services.AddScoped<IJwtService, JwtService>();
 
 services.AddIdentityCore<UserModel>(opt =>
     {
@@ -51,7 +51,7 @@ services.AddScoped<IPasswordService, PasswordService>();
 services.AddScoped<IAuthorizationService, AuthorizationService>();
 
 var key = new SymmetricSecurityKey(Encoding.UTF8
-    .GetBytes(Configuration["TokenKey"]));
+    .GetBytes(authsSection?.TokenKey));
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(

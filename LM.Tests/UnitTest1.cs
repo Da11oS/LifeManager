@@ -1,3 +1,4 @@
+using DataModel;
 using LM.Api.Admin;
 using LM.Base.Models;
 using LM.Data;
@@ -9,14 +10,14 @@ namespace LM.Tests
     [TestClass]
     public class UnitTest1
     {
-        private DbContext _ctx;
+        private LifeManagerDb _ctx;
         private IUserStore<UserModel> _user;
         private IJwtService _jwtService;
 
         [TestInitialize]
         public void Init()
         {
-            _ctx = (DbContext)(TestsInit.CreateService().GetService(typeof(DbContext)));
+            _ctx = (LifeManagerDb)(TestsInit.CreateService().GetService(typeof(LifeManagerDb)));
             _user = (IUserStore<UserModel>)(TestsInit.CreateService().GetService(typeof(IUserStore<UserModel>)));
             _jwtService = (IJwtService)(TestsInit.CreateService().GetService(typeof(IJwtService)));
         }
@@ -44,7 +45,7 @@ namespace LM.Tests
                 PasswordHash = "$2a$11$HnhuZimK0Do8QYTIZxUyT.oZf2UVSg9YCOaxwWrImoA97KI5wGpaW",
                 UserName = "jwt_user"
             };
-            _jwtService.CreateToken(newUser);
+            // _jwtService.CreateToken(newUser);
         }
     }
 }

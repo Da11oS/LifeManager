@@ -11,7 +11,6 @@ public interface IJwtService
     Task<AdmSchema.RefreshKey?> GetRefreshToken(UserModel user);
     Task<bool> IsValidRefreshToken(string refreshToken, Guid userId,
         CancellationToken cancellationToken = default);
-
     Task<AdmSchema.RefreshKey?> UpdateRefreshTokenAsync(AdmSchema.RefreshKey token,
         CancellationToken cancellationToken = default);
 }
