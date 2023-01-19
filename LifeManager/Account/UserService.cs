@@ -148,7 +148,7 @@ public class UserService : IUserService
     {
         var items = claims.Select(s => new AdmSchema.Claim()
         {
-            Id = default,
+            Id = Guid.NewGuid(),
             FUserId = user.Id,
             CKey = s.Type,
             CValue = s.Value,

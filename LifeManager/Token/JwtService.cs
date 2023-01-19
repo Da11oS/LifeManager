@@ -55,13 +55,12 @@ public class JwtService : IJwtService
         var newToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(key.ToString()));
         var updatedKey = new AdmSchema.RefreshKey
         {
-            Id = token.Id,
             Key = newToken,
             NExpires = DateTime.Now.AddMilliseconds(_authsConfig.RefreshLifeTimeMs),
             FUserId = token.FUserId
         };
         
-        await _refreshKeysRepository.SaveAsync(updatedKey);
+        var res = await _refreshKeysRepository.SaveAsync(updatedKey);
         
         return updatedKey;
     }

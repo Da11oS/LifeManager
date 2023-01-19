@@ -71,7 +71,7 @@ public class AuthorizationService : IAuthorizationService
             await _userService.AddClaimsAsync(newUser,
                 claims, cancellationToken);
 
-            tr.CommitAsync(cancellationToken);
+            
 
             var userClaims = await _userService.GetClaimsAsync(newUser, cancellationToken);
             var jwt = _jwtService.CreateAccessToken(newUser);
@@ -79,7 +79,7 @@ public class AuthorizationService : IAuthorizationService
             {
                 FUserId = newUser.Id
             }, cancellationToken);
-
+            tr.CommitAsync(cancellationToken);
             return new RegisterResult()
             {
                 Claims = userClaims.ToArray(),

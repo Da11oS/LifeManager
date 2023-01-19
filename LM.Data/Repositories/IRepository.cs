@@ -31,8 +31,8 @@ public interface IRepository<T>
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public Task<int> SaveAsync(T entity, CancellationToken cancellationToken = default);
 
+    public Task<int> SaveAsync(T entity, CancellationToken cancellationToken = default);
     /// <summary>
     /// Удалить
     /// </summary>
